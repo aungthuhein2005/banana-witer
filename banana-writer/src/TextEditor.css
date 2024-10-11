@@ -10,7 +10,8 @@
     outline: none;
   }
 
-  .font-size-tool{
+  .font-size-tool,
+  .file-tool{
     margin: 8px;
     width: max-content;
     background-color: white;
@@ -22,13 +23,31 @@
     box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2);
   }
 
-  .font-size-tool li{
+  .font-size-tool li,
+  .file-tool li{
     text-align: start;
     cursor: pointer;
     padding: 0 8px;
     list-style: none;
   }
-  .font-size-tool li:hover{
+
+  .file-tool li{
+    padding: 8px 12px;
+  
+  }
+
+  .file-tool li div{
+      display: flex;
+    align-items: center;
+  }
+
+  .file-tool li i{
+    margin-right: 8px;
+  }
+
+  .font-size-tool li:hover,
+  .file-tool li:hover
+  {
     background-color: #eae9e9;
   }
 
@@ -88,3 +107,16 @@
     margin-right: 5px;
   }
   
+  blockquote{
+    margin-left: 0;
+    padding-left: 12px;
+    border-left: 3px solid #333;
+  }
+
+  code{
+    background-color: #f9f9f9;
+    padding: 8px;
+    border: .1px solid #808080;
+    border-radius: 2px;
+    display: block;
+  }
