@@ -14,7 +14,7 @@ const TextEditor = ({ noteToOpen, setNoteToDisplay }) => {
 
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   
-  const execCommand = (command,file) => {
+  const execCommand = (command,file,value,selection) => {
     if (command === "code") {
       const selection = window.getSelection();
       if (selection.rangeCount > 0) {
@@ -84,31 +84,95 @@ const TextEditor = ({ noteToOpen, setNoteToDisplay }) => {
       selection.removeAllRanges();
       selection.addRange(range);
     }
-    }else if (command === "image" && file) {
+    }else if (command === "file" && file) {
+      fileHandle(file);
+    }else if(command === 'fontfamily'){
       const selection = window.getSelection();
       if (selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
-        if (file) {
-          const reader = new FileReader();
-          // console.log(reader.result);
-
-          reader.onloadend = () => {
-            const imgElement = document.createElement("img");
-            imgElement.src = reader.result; // Set the src to the result of FileReader
-            imgElement.style.maxWidth = "100%"; // Optional: limit the image width
-
-            range.collapse(false); // Collapse the range to the end (false means the end)
-            range.insertNode(imgElement); // Insert the image element at the end of the selection
-          };
-          reader.readAsDataURL(file); 
-      };
+        const selectedText = range.toString();
+      if (selectedText) {
+        const span = document.createElement("span");
+        span.style.fontFamily = value; // Apply the selected font family
+        span.textContent = selectedText;
+        range.deleteContents();
+        range.insertNode(span); 
+      }
+      }
+    } else if(command === "link") {
+        const linkElement = document.createElement("a");
+        linkElement.href = value;
+        linkElement.textContent = selection.toString();
+        linkElement.target = "_blank"; 
+        
+        selection.deleteContents();
+        selection.insertNode(linkElement);
+      
     }
-    }  else {
+      else {
       document.execCommand(command, false, null); // For other commands
     }
   };
   
 
+  const fileHandle = (file) => {
+    if (file) {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          let element;
+
+          if (file.type.startsWith('image/')) {
+            // Create an image element
+            element = document.createElement("img");
+            element.src = reader.result; // Set image source to the FileReader result
+            element.style.maxWidth = "100%"; // Set optional styling
+          } else if (file.type.startsWith('video/')) {
+            // Create a video element
+            element = document.createElement("video");
+            element.src = reader.result;
+            element.controls = true;
+            element.style.maxWidth = "100%"; // Set optional styling
+          } else if (file.type.startsWith('audio/')) {
+            // Create an audio element
+            element = document.createElement("audio");
+            element.src = reader.result;
+            element.controls = true;
+          } else if (file.type.startsWith('application/')) {
+            // Create a download link for application files
+            element = document.createElement("a");
+            element.style.display = 'inline-block'
+            element.style.background = '#ccc';
+            element.style.borderRadius = "8px";
+            element.style.padding = "8px";
+            element.href = reader.result;
+            element.textContent = `Download ${file.name}`;
+            element.download = file.name;
+          } else {
+            // Handle unknown file types
+            element = document.createElement("p");
+            element.textContent = `Unknown file type: ${file.type}`;
+          }
+
+          // Insert the created element at the current cursor position
+          range.collapse(false); // Collapse the range to the end
+          range.insertNode(element); // Insert the element
+
+          // Move the selection range after the inserted node
+          range.setStartAfter(element);
+          range.setEndAfter(element);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        };
+
+        reader.readAsDataURL(file); // Read the file content and trigger onloadend
+      }
+    }
+  };
+  
  
   
   const handleSelectionChange = () => {
