@@ -3,7 +3,7 @@
 }
 
 .editor {
-    border: 1px solid red;
+    border: 1px solid #ccc;
     padding: 10px;
     min-height: 150px;
     width: 80%;
@@ -81,37 +81,54 @@
     border-radius: 4px;
     cursor: pointer;
     margin-right: 8px;
-    background-color: white;
     border: 0;
 }
 
-.toolbar .tool:hover{
-      box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.1);
-  }
 
   input{
     border: 0;
     outline: none;
   }
   
-  .toolbar {
+  .toolbar{
     border-radius: 4px;
     padding: 5px;
     position: absolute;
-    background: white;
-    box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2);
     margin-top: 10px;
+  }
+
+  .toolbar.light{
+     background: white;
+    box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .toolbar.dark{
+    background: #333;
+    box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .dark .tool{
+    background-color: #333;
+    color: #fff;
+  }
+
+  .light .tool{
+    background-color: #fff;
+    color: #333;
+  }
+
+  .light .tool:hover{
+    background-color: #f4f1f1;
+  }
+
+  .dark .tool:hover{
+    background-color: #4b4b4b;
   }
   
   .toolbar button {
     margin-right: 5px;
   }
   
-  blockquote{
-    margin-left: 0;
-    padding-left: 12px;
-    border-left: 3px solid #333;
-  }
 
   select.tool{
     outline: none;
@@ -121,10 +138,3 @@
     text-align: left;
   }
 
-  code{
-    background-color: #f9f9f9;
-    padding: 8px;
-    border: .1px solid #808080;
-    border-radius: 2px;
-    display: block;
-  }
